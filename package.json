@@ -2,15 +2,18 @@
   "name": "uploadfiles",
   "version": "1.0.0",
   "description": "Building an application for uploading files eg: Audio and Videos",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon src/index.js"
   },
   "author": "Shivshankar",
   "license": "ISC",
   "dependencies": {
+    "cloudinary": "^2.5.1",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
+    "express-fileupload": "^1.5.1",
     "mongoose": "^8.7.2",
     "prettier": "^3.3.3"
   },
