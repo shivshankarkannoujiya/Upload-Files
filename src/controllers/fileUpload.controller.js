@@ -5,15 +5,16 @@ import { File } from "../models/files.model.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
+//TODO: Get the current file name and directory name
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const localFileUpload = asyncHandler(async (req, res) => {
-    //TODO: fetch file
+    //TODO: Fetch the uploaded file from the request
     const file = req.files.file;
     console.log("File: ", file);
 
-    //TODO: Path to store the files
+    //TODO: Define the path to store the uploaded file
     const uploadPath = path.join(
         __dirname,
         "..",
@@ -24,19 +25,22 @@ const localFileUpload = asyncHandler(async (req, res) => {
     );
     console.log("PATH: ", uploadPath);
 
+    //TODO: Move the file to the defined path
     file.mv(uploadPath, (error) => {
         if (error) {
             console.log(`ERROR: ${error}`);
+            //TODO: Respond with an error if the file move fails
             return res
                 .status(500)
                 .json(new ApiResponse(500, "File Upload Failed"));
         }
 
-        // TODO: Only respond if the file was moved successfully
+        //TODO: Respond with success if the file was moved successfully
         return res
             .status(200)
             .json(new ApiResponse(200, "Local File Uploaded Successfully"));
     });
 });
+
 
 export { localFileUpload };
