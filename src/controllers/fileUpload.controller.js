@@ -42,5 +42,4 @@ const localFileUpload = asyncHandler(async (req, res) => {
     });
 });
 
-
 export { localFileUpload };
