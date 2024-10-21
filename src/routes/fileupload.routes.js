@@ -1,13 +1,12 @@
 import { Router } from "express";
-import { localFileUpload } from "../controllers/fileUpload.controller.js";
+import {
+    imageUpload,
+    localFileUpload,
+} from "../controllers/fileUpload.controller.js";
 
+const router = Router();
 
-const router = Router()
+router.route("/localFileUpload").post(localFileUpload);
+router.route("/imageUpload").post(imageUpload);
 
-
-router.route("/localFileUpload").post(localFileUpload)
-
-
-export default router
-
-
+export default router;
