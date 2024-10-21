@@ -5,7 +5,6 @@ import { uploadFileToCloudinary } from "../utils/upload.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
-
 //TODO: Get the current file name and directory name
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -74,18 +73,20 @@ const imageUpload = asyncHandler(async (req, res) => {
 
         const response = await uploadFileToCloudinary(file, "webghost");
         console.log(response);
-        // const fileData = await File.create({
-        //     name,
-        //     tags,
-        //     email,
 
-        // })
+        const fileData = await File.create({
+            name,
+            tags,
+            email,
+            imageUrl: response.secure_url,
+        });
 
         return res
             .status(200)
             .json(
                 new ApiResponse(
                     200,
+                    fileData,
                     "Image Successfully Uploaded on Cloudinary"
                 )
             );
@@ -96,5 +97,7 @@ const imageUpload = asyncHandler(async (req, res) => {
             .json(new ApiResponse(500, "Internal Server Error"));
     }
 });
+
+
 
 export { localFileUpload, imageUpload };
