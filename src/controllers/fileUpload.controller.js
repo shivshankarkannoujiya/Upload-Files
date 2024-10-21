@@ -98,6 +98,79 @@ const imageUpload = asyncHandler(async (req, res) => {
     }
 });
 
+const videoUpload = asyncHandler(async (req, res) => {
+    try {
+        const { name, email, tags } = req.body;
+        console.table([name, email, tags]);
 
+        const file = req.files.videoFile;
+        console.log("File", file);
 
-export { localFileUpload, imageUpload };
+        const supportedTypes = ["mp4", "mov"];
+        const fileType = file.name.split(".").pop().toLowerCase();
+        console.log("fileType", fileType);
+
+        // TODO: add a upper limit of 5MB for videos
+        if (!isFileTypeSupported(fileType, supportedTypes, "video")) {
+            return res
+                .status(400)
+                .json(new ApiResponse(400, "File format is not supported"));
+        }
+
+        const response = await uploadFileToCloudinary(file, "webghost");
+        console.log("response", response);
+
+        const fileData = await File.create({
+            name,
+            tags,
+            email,
+            videoUrl: response.secure_url,
+        });
+
+        return res
+            .status(200)
+            .json(
+                new ApiResponse(200, fileData, "Video uploaded Successfully")
+            );
+    } catch (error) {
+        console.error("Error Uploading video", error);
+        return res
+            .status(500)
+            .json(new ApiResponse(500, "Internal Server Error"));
+    }
+});
+
+const uploadReducedImage = asyncHandler(async (req, res) => {
+    const { name, tags, email } = req.body;
+    console.table([name, tags, email]);
+
+    const file = req.files.imageFile;
+    console.log("file", file);
+
+    const supportedTypes = ["jpg", "jpeg", "png"];
+    const fileType = file.name.split(".").pop().toLowerCase();
+
+    // TODO: Add:- limit for fileSize
+    if (!isFileTypeSupported(fileType, supportedTypes)) {
+        return res
+            .status(400)
+            .json(new ApiResponse(400, "File format is not Supported"));
+    }
+
+    // TODO: upload compressed image
+    const response = await uploadFileToCloudinary(file, "webghost", 100);
+    console.log("response", response);
+
+    const fileData = await File.create({
+        name,
+        tags,
+        email,
+        imageUrl: response.secure_url,
+    });
+
+    return res
+        .status(200)
+        .json(new ApiResponse(200, fileData, "Image uploaded Successfully !!"));
+});
+
+export { localFileUpload, imageUpload, videoUpload, uploadReducedImage };
